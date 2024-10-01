@@ -1,14 +1,53 @@
 import { useState, useRef, useEffect, FC } from 'react';
 import { useInView } from 'react-intersection-observer';
+import { TIngredient } from '@utils-types';
+
+import {
+  selectIngredients,
+  getIngredientBuns,
+  getIngredientMains,
+  getIngredientSauces,
+  selectLoading,
+  selectError,
+  getCard
+} from '@slices';
+import { getIngredientData } from '@slices';
 
 import { TTabMode } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from 'src/services/store';
 
 export const BurgerIngredients: FC = () => {
-  /** TODO: взять переменные из стора */
-  const buns = [];
-  const mains = [];
-  const sauces = [];
+  const dispatch: AppDispatch = useDispatch();
+
+  const loading = useSelector(selectLoading);
+  const error = useSelector(selectError);
+  const ingredientBun = useSelector(getIngredientBuns);
+  const ingredientMains = useSelector(getIngredientMains);
+  const ingredientSauces = useSelector(getIngredientSauces);
+  const ingredients = useSelector(selectIngredients);
+  const getCardData = useSelector(getCard);
+
+  const [bunsList, setBunsList] = useState<TIngredient[]>([]);
+  const [mainsList, setMainsList] = useState<TIngredient[]>([]);
+  const [saucesList, setSaucesList] = useState<TIngredient[]>([]);
+
+  useEffect(() => {
+    dispatch(getIngredientData());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (ingredientBun) {
+      setBunsList(ingredientBun);
+    }
+    if (ingredientMains) {
+      setMainsList(ingredientMains);
+    }
+    if (ingredientSauces) {
+      setSaucesList(ingredientSauces);
+    }
+  }, [ingredientBun, ingredientMains, ingredientSauces]);
 
   const [currentTab, setCurrentTab] = useState<TTabMode>('bun');
   const titleBunRef = useRef<HTMLHeadingElement>(null);
@@ -47,14 +86,12 @@ export const BurgerIngredients: FC = () => {
       titleSaucesRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  return null;
-
   return (
     <BurgerIngredientsUI
       currentTab={currentTab}
-      buns={buns}
-      mains={mains}
-      sauces={sauces}
+      buns={bunsList}
+      mains={mainsList}
+      sauces={saucesList}
       titleBunRef={titleBunRef}
       titleMainRef={titleMainRef}
       titleSaucesRef={titleSaucesRef}

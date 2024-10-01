@@ -1,15 +1,22 @@
-import { useSelector } from '../../services/store';
+import { AppDispatch, useSelector } from '../../services/store';
 
 import styles from './constructor-page.module.css';
 
 import { BurgerIngredients } from '../../components';
 import { BurgerConstructor } from '../../components';
 import { Preloader } from '../../components/ui';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
+import { getIngredientData } from '@slices';
+import { useDispatch } from 'react-redux';
 
 export const ConstructorPage: FC = () => {
-  /** TODO: взять переменную из стора */
+  const dispatch: AppDispatch = useDispatch();
+  const { loading } = useSelector((state) => state.ingredients);
   const isIngredientsLoading = false;
+
+  useEffect(() => {
+    dispatch(getIngredientData());
+  }, [dispatch]);
 
   return (
     <>
