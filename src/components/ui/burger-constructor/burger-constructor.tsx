@@ -20,18 +20,18 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
   closeOrderModal
 }) => (
   <section className={styles.burger_constructor}>
-    {constructorItems?.bun.name ? (
+    {constructorItems?.bun?.name ? (
       <div className={`${styles.element} mb-4 mr-4`}>
         <ConstructorElement
           type='top'
           isLocked
           text={
-            constructorItems?.bun.name
-              ? `${constructorItems?.bun.name} (верх)`
+            constructorItems.bun.name
+              ? `${constructorItems.bun.name} (верх)`
               : 'Выберите булки'
           }
-          price={constructorItems?.bun.price}
-          thumbnail={constructorItems?.bun.image}
+          price={constructorItems.bun.price}
+          thumbnail={constructorItems.bun.image}
         />
       </div>
     ) : (
@@ -42,7 +42,7 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
       </div>
     )}
     <ul className={styles.elements}>
-      {constructorItems.ingredients.length > 0 ? (
+      {constructorItems?.ingredients?.length > 0 ? (
         constructorItems.ingredients.map(
           (item: TConstructorIngredient, index: number) => (
             <BurgerConstructorElement
@@ -61,7 +61,7 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
         </div>
       )}
     </ul>
-    {constructorItems.bun.name ? (
+    {constructorItems?.bun?.name ? (
       <div className={`${styles.element} mt-4 mr-4`}>
         <ConstructorElement
           type='bottom'

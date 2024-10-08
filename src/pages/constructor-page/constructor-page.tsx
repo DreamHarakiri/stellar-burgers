@@ -6,17 +6,14 @@ import { BurgerIngredients } from '../../components';
 import { BurgerConstructor } from '../../components';
 import { Preloader } from '../../components/ui';
 import { FC, useEffect } from 'react';
-import { getIngredientData } from '@slices';
+import { getIngredientData } from '../../services/asyncFetch/AsyncFetch';
 import { useDispatch } from 'react-redux';
 
 export const ConstructorPage: FC = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { loading } = useSelector((state) => state.ingredients);
-  const isIngredientsLoading = false;
 
-  useEffect(() => {
-    dispatch(getIngredientData());
-  }, [dispatch]);
+  const { loading } = useSelector((state) => state.ingredients);
+  const isIngredientsLoading = loading;
 
   return (
     <>

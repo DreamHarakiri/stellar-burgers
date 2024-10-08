@@ -1,7 +1,6 @@
 import React, { FC, memo } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './burger-ingredient.module.css';
-import { addToCard } from '@slices';
 
 import {
   Counter,
@@ -11,16 +10,12 @@ import {
 
 import { TBurgerIngredientUIProps } from './type';
 import { useDispatch, useSelector } from 'react-redux';
+import { addConstructor } from '../../../services/slices/constructor.slice';
 
 export const BurgerIngredientUI: FC<TBurgerIngredientUIProps> = memo(
   ({ ingredient, count, handleAdd, locationState }) => {
     const { image, price, name, _id } = ingredient;
 
-    const dispatch = useDispatch();
-
-    const handleAddClick = () => {
-      dispatch(addToCard(ingredient));
-    };
     return (
       <li className={styles.container}>
         <Link
@@ -38,7 +33,7 @@ export const BurgerIngredientUI: FC<TBurgerIngredientUIProps> = memo(
         </Link>
         <AddButton
           text='Добавить'
-          onClick={handleAddClick}
+          onClick={handleAdd}
           extraClass={`${styles.addButton} mt-8`}
         />
       </li>

@@ -1,28 +1,54 @@
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
-import { selectIngredients } from '@slices';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  clearConstructor,
+  getConstructor,
+  moveConstructor
+} from '../../services/slices/constructor.slice';
+import {
+  clearOrder,
+  getOrder,
+  getRequest
+} from '../../services/slices/order.slice';
+import { userDataSelector } from '../../services/slices/user.slice';
+import { useNavigate } from 'react-router-dom';
+import { getOrderBurger } from '../../services/asyncFetch/AsyncFetch';
+import { AppDispatch } from '../../services/store';
 
 export const BurgerConstructor: FC = () => {
   /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
-  //export const getFavorite = useSelector(getFavorites);
+  const navigate = useNavigate();
+  const user = useSelector(userDataSelector);
 
-  const constructorItems = {
-    bun: {
-      price: 0
-    },
-    ingredients: []
-  };
+  const dispatch: AppDispatch = useDispatch();
+  const constructorItems = useSelector(getConstructor);
 
-  const orderRequest = false;
+  const ingredientsArray =
+    !constructorItems.bun || !constructorItems.ingredients
+      ? []
+      : [
+          constructorItems.bun._id,
+          ...constructorItems.ingredients.map((item) => item._id)
+        ];
 
-  const orderModalData = null;
+  const orderRequest = useSelector(getRequest);
+
+  const orderModalData = useSelector(getOrder);
 
   const onOrderClick = () => {
-    if (!constructorItems.bun || orderRequest) return;
+    if (!constructorItems?.bun || orderRequest) return;
+    if (!user) {
+      navigate('/login', { replace: true });
+      return;
+    }
+    dispatch(getOrderBurger(ingredientsArray));
   };
-  const closeOrderModal = () => { };
+
+  const closeOrderModal = () => {
+    dispatch(clearOrder());
+  };
 
   const price = useMemo(
     () =>
