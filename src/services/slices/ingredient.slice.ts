@@ -24,7 +24,7 @@ export const ingredientsSlice = createSlice({
       if (item) {
         state.favorite.push(item);
       } else {
-        console.log('item is undefined or nuls');
+        console.log('item is undefined or null');
       }
     }
   },
