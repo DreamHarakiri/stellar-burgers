@@ -44,6 +44,7 @@ export const BurgerConstructor: FC = () => {
       return;
     }
     dispatch(getOrderBurger(ingredientsArray));
+    dispatch(clearConstructor());
   };
 
   const closeOrderModal = () => {
