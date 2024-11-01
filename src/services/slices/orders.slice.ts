@@ -7,7 +7,7 @@ export type TOrdersState = {
   request: boolean;
 };
 
-const initialState: TOrdersState = {
+export const initialState: TOrdersState = {
   orders: [],
   request: false
 };

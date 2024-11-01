@@ -9,7 +9,7 @@ export type TLoadIngredients = {
   favorite: Array<TIngredient>;
 };
 
-const initialState: TLoadIngredients = {
+export const initialState: TLoadIngredients = {
   ingredients: [],
   loading: false,
   error: null,
@@ -39,8 +39,12 @@ export const ingredientsSlice = createSlice({
       })
       .addCase(getIngredientData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || 'Failed to fetch ingredients';
+        state.error =
+          action.error && action.error.message
+            ? action.error.message
+            : 'Failed to fetch ingredients';
       })
+
       .addCase(getIngredientData.fulfilled, (state, action) => {
         state.loading = false;
         state.ingredients = action.payload;

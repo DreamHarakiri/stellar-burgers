@@ -19,10 +19,11 @@ export type TUserState = {
   profileLoading: boolean;
   profileError: string;
   isAuth: boolean;
+
   updateError: string;
 };
 
-const initialState: TUserState = {
+export const initialState: TUserState = {
   user: null,
   registerLoading: false,
   registerError: '',
@@ -57,10 +58,18 @@ export const userSlice = createSlice({
       })
       .addCase(getRegisterData.rejected, (state, action) => {
         state.registerLoading = false;
-        state.registerError = JSON.parse(
-          JSON.stringify(action.payload)
-        ).message;
+        if (action.payload) {
+          try {
+            const payload = JSON.parse(JSON.stringify(action.payload));
+            state.registerError = payload.message;
+          } catch (e) {
+            state.registerError = 'Parsing error: invalid JSON';
+          }
+        } else {
+          state.registerError = 'Unknown error';
+        }
       })
+
       .addCase(getRegisterData.fulfilled, (state, action) => {
         state.registerLoading = false;
         state.user = action.payload;
@@ -71,11 +80,21 @@ export const userSlice = createSlice({
       })
       .addCase(getLoginData.rejected, (state, action) => {
         state.loginLoading = false;
-        state.loginError = JSON.parse(JSON.stringify(action.payload)).message;
+        try {
+          const payload =
+            typeof action.payload === 'object'
+              ? action.payload
+              : JSON.parse(JSON.stringify(action.payload));
+          state.loginError = payload.message;
+        } catch (e) {
+          state.loginError = 'Parsing error: invalid JSON';
+        }
       })
+
       .addCase(getLoginData.fulfilled, (state, action) => {
         state.loginLoading = false;
         state.user = action.payload;
+        state.isAuth = true;
       })
       .addCase(getUser.fulfilled, (state, action) => {
         state.user = action.payload.user;
@@ -84,6 +103,20 @@ export const userSlice = createSlice({
         state.profileLoading = true;
         state.loginError = '';
       })
+      .addCase(logoutUserThunk.rejected, (state, action) => {
+        state.profileLoading = false;
+        try {
+          const payload =
+            typeof action.payload === 'object'
+              ? action.payload
+              : JSON.parse(JSON.stringify(action.payload));
+          state.loginError = payload.message;
+        } catch (e) {
+          state.loginError = 'Parsing error: invalid JSON';
+        }
+        console.log('Ошибка выполнения выхода'); // добавляем логирование здесь
+      })
+
       .addCase(logoutUserThunk.fulfilled, (state) => {
         state.profileLoading = false;
         localStorage.clear();
@@ -114,6 +147,7 @@ export const userSlice = createSlice({
   }
 });
 
+export const UserReducer = userSlice.reducer;
 export const { reducer } = userSlice;
 export const { authChecked } = userSlice.actions;
 export const {

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { nanoid } from 'nanoid';
 import { TConstructorIngredient, TIngredient } from '@utils-types';
-import { nanoid } from '@reduxjs/toolkit';
 
 type TConstructor = {
   ingredients: TConstructorIngredient[];
@@ -20,12 +20,9 @@ export const constructorSlice = createSlice({
       const newItem = { ...item, id: nanoid() };
       if (newItem.type === 'bun') {
         state.bun = newItem;
-        console.log('Булка добавлена');
       } else {
         const { ingredients } = state;
-
         state.ingredients.push(newItem);
-        console.log('не булка добавлена');
       }
     },
     removeConstructor: (state, { payload: item }) => {
@@ -35,7 +32,6 @@ export const constructorSlice = createSlice({
     },
     moveConstructor: (state, { payload: { item, position } }) => {
       const index = state.ingredients.findIndex((i) => i.id === item.id);
-
       const [movedItem] = state.ingredients.splice(index, 1);
       state.ingredients.splice(index - position, 0, movedItem);
     },
@@ -47,11 +43,10 @@ export const constructorSlice = createSlice({
 });
 
 export const { reducer } = constructorSlice;
-
-export const { getConstructor } = constructorSlice.selectors;
 export const {
   addConstructor,
   removeConstructor,
   moveConstructor,
   clearConstructor
 } = constructorSlice.actions;
+export const { getConstructor } = constructorSlice.selectors;
