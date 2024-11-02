@@ -9,13 +9,15 @@ import {
 } from '@zlden/react-developer-burger-ui-components';
 
 import { TBurgerIngredientUIProps } from './type';
+import { useDispatch, useSelector } from 'react-redux';
+import { addConstructor } from '../../../services/slices/constructor.slice';
 
 export const BurgerIngredientUI: FC<TBurgerIngredientUIProps> = memo(
   ({ ingredient, count, handleAdd, locationState }) => {
     const { image, price, name, _id } = ingredient;
 
     return (
-      <li className={styles.container}>
+      <li className={styles.container} data-cy={ingredient._id}>
         <Link
           className={styles.article}
           to={`/ingredients/${_id}`}
